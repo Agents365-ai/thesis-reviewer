@@ -13,7 +13,7 @@ homepage: https://github.com/Agents365-ai/thesis-reviewer
 compatibility: Requires markitdown MCP for .docx conversion. Works with any LLM-based agent on any platform.
 platforms: [macos, linux, windows]
 allowed-tools: [Read, Write, Edit, Bash, mcp__markitdown__convert_to_markdown]
-metadata: {"openclaw":{"requires":{"bins":["npx"]},"emoji":"📝","os":["darwin","linux","win32"]},"hermes":{"tags":["thesis-review","dissertation","doctoral-thesis","phd-thesis","academic-review","life-sciences","graduate-thesis","论文评审","学位论文","博士论文"],"category":"research","requires_tools":[],"related_skills":["paper-reader","scientific-thinking-general","grant-thinking-general"]},"pimo":{"category":"research","tags":["thesis-review","academic-review","life-sciences","doctoral-thesis"]},"author":"Agents365-ai","version":"1.1.0"}
+metadata: {"openclaw":{"requires":{"bins":["npx"]},"emoji":"📝","os":["darwin","linux","win32"]},"hermes":{"tags":["thesis-review","dissertation","doctoral-thesis","phd-thesis","academic-review","life-sciences","graduate-thesis","论文评审","学位论文","博士论文"],"category":"research","requires_tools":[],"related_skills":["paper-reader","scientific-thinking-general","grant-thinking-general"]},"pimo":{"category":"research","tags":["thesis-review","academic-review","life-sciences","doctoral-thesis"]},"author":"Agents365-ai","version":"2.0.0"}
 ---
 
 # 学位论文评审
@@ -23,14 +23,22 @@ metadata: {"openclaw":{"requires":{"bins":["npx"]},"emoji":"📝","os":["darwin"
 系统化评审生命科学领域硕士和博士学位论文。以导师视角提供建设性反馈，帮助学生在提交前改进论文质量。
 
 **支持学位类型：**
-- **硕士学位论文** — 标准评审标准
-- **博士学位论文** — 更高的创新性、独立研究能力、学术贡献要求
+- **学术学位硕士论文** — 标准评审标准，侧重学术研究能力和新见解
+- **学术学位博士论文** — 更高的创新性、独立研究能力、学术贡献要求
+- **专业学位硕士/博士论文** — 侧重实践能力，论文形式可多元化
 
-**评审覆盖四大维度：**
+**依据标准：**
+- GB/T 7713.1-2006《学位论文编写规则》
+- GB/T 7714-2015《信息与文献 参考文献著录规则》
+- GB 3100-3102-93《量和单位》
+- 《中华人民共和国学位法》（2025年1月1日施行）
+
+**评审覆盖五大维度：**
 1. 学术质量（研究问题、创新性、方法论、实验设计）
 2. 写作质量（逻辑连贯性、论证严密性、语言表达）
-3. 格式规范（章节完整性、图表规范、参考文献）
+3. 格式规范（GB/T 7713.1 结构完整性、图表规范、参考文献 GB/T 7714）
 4. 数据与结果（数据呈现、统计分析、图表质量）
+5. 学术诚信与规范（引用规范、数据真实性、独创性声明）
 
 **严重程度标记：**
 - 🔴 严重问题：必须修改，影响论文核心质量
@@ -72,11 +80,16 @@ digraph thesis_review {
 3. 将转换结果保存到论文同目录下：`{filename}-converted.md`
 4. 读取转换后的 Markdown，识别章节结构
 5. 提取基本信息：论文题目、章节数、各章标题
-6. **识别学位类型**：从封面页或用户指令中判断是硕士论文还是博士论文。如果无法判断，询问用户：
-   > 请确认论文类型：(1) 硕士学位论文 (2) 博士学位论文
-7. 向用户报告：已完成转换，学位类型为{硕士/博士}，共识别到 N 个章节，列出章节标题
+6. **识别学位类型**：从封面页或用户指令中判断以下信息。如果无法判断，询问用户：
+   - 学位层次：硕士 or 博士
+   - 学位类型：学术学位 or 专业学位
+   > 请确认：(1) 学术硕士 (2) 专业硕士 (3) 学术博士 (4) 专业博士
+7. 向用户报告：已完成转换，学位类型为{学术/专业}{硕士/博士}，共识别到 N 个章节，列出章节标题
 
-**学位类型决定评审标准：** 博士论文将启用 `checklist.md` 中的「博士论文附加检查」部分，在创新性、独立研究能力、学术贡献等方面采用更高标准。
+**学位类型决定评审标准：**
+- 博士论文 → 启用 `checklist.md` 中的「博士论文附加检查」部分
+- 专业学位论文 → 启用 `checklist.md` 中的「专业学位论文注意事项」部分
+- 学术学位论文 → 重点关注学术创新性和理论贡献
 
 **如果用户未提供文件路径，提示：**
 > 请提供学位论文的 .docx 文件路径，例如：`/path/to/thesis.docx`
@@ -87,7 +100,7 @@ digraph thesis_review {
 
 通读全文转换后的 Markdown，输出整体扫描报告：
 
-1. **结构完整性**：检查是否包含所有必要章节（摘要、目录、绪论、材料与方法、结果、讨论、结论、参考文献、致谢）。列出缺失的章节。
+1. **结构完整性**（依据 GB/T 7713.1-2006）：检查是否按顺序包含所有必要部分——封面、独创性声明、中英文摘要、目录、正文（绪论→各章→结论）、参考文献、附录（如需）、致谢、作者简历及学术成果。列出缺失的部分。
 2. **研究问题清晰度**：研究问题/科学问题是否在绪论中清晰提出？
 3. **全局印象**：2-3 句话概括论文的整体质量和第一印象。
 4. **初步发现**：标注最突出的问题或亮点（不超过 5 条）。
@@ -224,3 +237,5 @@ digraph thesis_review {
 5. **导师视角**：语气应兼具严谨和关怀，目标是帮助学生成长
 6. **生命科学专业性**：关注实验设计的生物学合理性、数据的统计规范性、生物学命名规范等学科特有要求
 7. **学位层次适配**：博士论文需更高标准——创新性必须体现原创贡献而非增量改进；需展示独立研究能力；多章研究之间需有内在逻辑联系；文献综述需体现对领域的全局把握
+8. **国家标准合规**：格式规范以 GB/T 7713.1-2006 为基准，参考文献以 GB/T 7714-2015 为基准，量和单位以 GB 3100-3102-93 为基准
+9. **盲审风险意识**：从盲审评审专家的角度审视论文，预警可能导致退回或大修的问题（选题、创新性、学术性、规范性、写作水平）
