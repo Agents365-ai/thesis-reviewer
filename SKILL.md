@@ -5,22 +5,34 @@ description: >
   master's or doctoral thesis (硕士/博士学位论文). Triggers on keywords like
   "论文评审", "学位论文", "thesis review", "审阅论文", "论文修改意见",
   "硕士论文", "博士论文", "毕业论文", "doctoral thesis", "PhD thesis".
-  Covers life sciences theses with full-spectrum review: academic quality,
-  writing quality, formatting, and data analysis. Adapts review standards
-  based on degree level (master's vs doctoral).
+  Supports all disciplines with discipline-specific review modules
+  (life sciences, medicine, CS/AI, engineering, chemistry, physics,
+  social sciences). Full-spectrum review: academic quality, writing quality,
+  formatting, data analysis, and academic integrity. Adapts review standards
+  based on degree level and discipline.
 license: MIT
 homepage: https://github.com/Agents365-ai/thesis-reviewer
 compatibility: Requires markitdown MCP for .docx conversion. Works with any LLM-based agent on any platform.
 platforms: [macos, linux, windows]
 allowed-tools: [Read, Write, Edit, Bash, mcp__markitdown__convert_to_markdown]
-metadata: {"openclaw":{"requires":{"bins":["npx"]},"emoji":"📝","os":["darwin","linux","win32"]},"hermes":{"tags":["thesis-review","dissertation","doctoral-thesis","phd-thesis","academic-review","life-sciences","graduate-thesis","论文评审","学位论文","博士论文"],"category":"research","requires_tools":[],"related_skills":["paper-reader","scientific-thinking-general","grant-thinking-general"]},"pimo":{"category":"research","tags":["thesis-review","academic-review","life-sciences","doctoral-thesis"]},"author":"Agents365-ai","version":"2.0.0"}
+metadata: {"openclaw":{"requires":{"bins":["npx"]},"emoji":"📝","os":["darwin","linux","win32"]},"hermes":{"tags":["thesis-review","dissertation","doctoral-thesis","phd-thesis","academic-review","multi-discipline","graduate-thesis","论文评审","学位论文","博士论文"],"category":"research","requires_tools":[],"related_skills":["paper-reader","scientific-thinking-general","grant-thinking-general"]},"pimo":{"category":"research","tags":["thesis-review","academic-review","multi-discipline","doctoral-thesis"]},"author":"Agents365-ai","version":"3.0.0"}
 ---
 
 # 学位论文评审
 
 ## 概述
 
-系统化评审生命科学领域硕士和博士学位论文。以导师视角提供建设性反馈，帮助学生在提交前改进论文质量。
+系统化评审各学科硕士和博士学位论文。以导师视角提供建设性反馈，帮助学生在提交前改进论文质量。
+
+**支持学科领域：**
+- 生命科学（生物学、生物医学、生态学、农学）
+- 医学（临床医学、基础医学、公共卫生、药学）
+- 计算机科学与人工智能（CS、AI、ML、软件工程）
+- 工学（机械、电气、化工、土木、材料等）
+- 化学与材料科学
+- 物理学
+- 人文社会科学（经济学、管理学、法学、教育学、心理学等）
+- 其他学科（使用通用评审框架）
 
 **支持学位类型：**
 - **学术学位硕士论文** — 标准评审标准，侧重学术研究能力和新见解
@@ -80,16 +92,33 @@ digraph thesis_review {
 3. 将转换结果保存到论文同目录下：`{filename}-converted.md`
 4. 读取转换后的 Markdown，识别章节结构
 5. 提取基本信息：论文题目、章节数、各章标题
-6. **识别学位类型**：从封面页或用户指令中判断以下信息。如果无法判断，询问用户：
+6. **识别学位类型和学科**：从封面页或用户指令中判断以下信息。如果无法判断，询问用户：
    - 学位层次：硕士 or 博士
    - 学位类型：学术学位 or 专业学位
-   > 请确认：(1) 学术硕士 (2) 专业硕士 (3) 学术博士 (4) 专业博士
-7. 向用户报告：已完成转换，学位类型为{学术/专业}{硕士/博士}，共识别到 N 个章节，列出章节标题
+   - 学科领域：从以下选项中选择
+   > 请确认学位类型：(1) 学术硕士 (2) 专业硕士 (3) 学术博士 (4) 专业博士
+   >
+   > 请确认学科领域：(a) 生命科学 (b) 医学 (c) 计算机/AI (d) 工学 (e) 化学/材料 (f) 物理学 (g) 人文社科 (h) 其他
+7. 向用户报告：已完成转换，学位类型为{学术/专业}{硕士/博士}，学科为{学科}，共识别到 N 个章节，列出章节标题
 
-**学位类型决定评审标准：**
+**学位类型和学科决定评审标准：**
+- 所有论文 → 执行 `checklist.md` 中的通用检查项
+- 根据学科 → 加载 `disciplines/{学科}.md` 中的学科专项检查
 - 博士论文 → 启用 `checklist.md` 中的「博士论文附加检查」部分
 - 专业学位论文 → 启用 `checklist.md` 中的「专业学位论文注意事项」部分
 - 学术学位论文 → 重点关注学术创新性和理论贡献
+
+**学科专项检查文件：**
+| 学科 | 文件 |
+|------|------|
+| 生命科学 | `disciplines/life-sciences.md` |
+| 医学 | `disciplines/medicine.md` |
+| 计算机/AI | `disciplines/cs-ai.md` |
+| 工学 | `disciplines/engineering.md` |
+| 化学/材料 | `disciplines/chemistry.md` |
+| 物理学 | `disciplines/physics.md` |
+| 人文社科 | `disciplines/social-sciences.md` |
+| 其他 | 仅使用通用检查项 |
 
 **如果用户未提供文件路径，提示：**
 > 请提供学位论文的 .docx 文件路径，例如：`/path/to/thesis.docx`
@@ -128,7 +157,10 @@ digraph thesis_review {
 
 ### Step 2 — 逐章深入分析
 
-**在开始本步骤前，读取 `checklist.md` 获取完整的评审检查清单。**
+**在开始本步骤前：**
+1. 读取 `checklist.md` 获取通用评审检查清单
+2. 根据 Step 0 识别的学科领域，读取 `disciplines/{学科}.md` 获取学科专项检查清单
+3. 将两份清单合并使用
 
 按章节顺序，依次分析每一章：
 
@@ -235,7 +267,7 @@ digraph thesis_review {
 3. **肯定优点**：不要只挑问题，好的地方要明确标注 🟢
 4. **区分严重程度**：🔴 仅用于真正影响论文核心质量的问题，不要滥用
 5. **导师视角**：语气应兼具严谨和关怀，目标是帮助学生成长
-6. **生命科学专业性**：关注实验设计的生物学合理性、数据的统计规范性、生物学命名规范等学科特有要求
+6. **学科专业性**：根据论文所属学科，重点关注该学科特有的方法论要求、数据规范、术语规范和评审惯例（参见 `disciplines/` 目录下的学科专项检查清单）
 7. **学位层次适配**：博士论文需更高标准——创新性必须体现原创贡献而非增量改进；需展示独立研究能力；多章研究之间需有内在逻辑联系；文献综述需体现对领域的全局把握
 8. **国家标准合规**：格式规范以 GB/T 7713.1-2006 为基准，参考文献以 GB/T 7714-2015 为基准，量和单位以 GB 3100-3102-93 为基准
 9. **盲审风险意识**：从盲审评审专家的角度审视论文，预警可能导致退回或大修的问题（选题、创新性、学术性、规范性、写作水平）

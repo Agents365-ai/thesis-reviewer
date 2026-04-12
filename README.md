@@ -1,21 +1,24 @@
-# Thesis Reviewer — Systematic Thesis Review for Life Sciences
+# Thesis Reviewer — Systematic Thesis Review for All Disciplines
 
 [中文文档](README_CN.md)
 
-An AI coding agent skill for systematically reviewing master's and doctoral theses in life sciences. Provides full-spectrum, structured review feedback from a supervisor's perspective — designed to help students improve their thesis before submission.
+An AI coding agent skill for systematically reviewing master's and doctoral theses across all academic disciplines. Provides full-spectrum, structured review feedback from a supervisor's perspective — designed to help students improve their thesis before submission.
 
 ## What it does
 
 - Converts `.docx` thesis to Markdown via `markitdown` MCP, then reviews chapter by chapter
-- **Supports both master's and PhD theses** — auto-detects degree type, adapts review standards accordingly
-- **4 review dimensions**: academic quality, writing quality, formatting, data & results
+- **Supports all disciplines** with 7 discipline-specific review modules + universal framework
+- **Supports both master's and PhD theses** — auto-detects degree type, adapts review standards
+- **Academic vs professional degree** distinction per 2025 Degree Law
+- **5 review dimensions**: academic quality, writing quality, formatting (GB/T 7713.1), data & results, academic integrity
 - **Two-phase workflow**: Phase 1 auto deep analysis → Phase 2 interactive refinement
-- **60+ checklist items** (80+ for PhD) covering every aspect from experimental design to reference formatting
+- **100+ universal checklist items** + discipline-specific supplements
 - **PhD-specific evaluation**: originality assessment, independent research capability, research system coherence, publication record
+- **Blind review risk assessment**: predicts potential issues across 5 review dimensions
 - **Severity markers**: 🔴 Serious / 🟡 Needs improvement / 🟢 Good — no ambiguous numeric scores
 - **Cross-chapter consistency checks**: questions↔results, methods↔data, citations↔references
 - **Prioritized revision roadmap** — students know exactly what to fix first
-- **Life sciences domain expertise**: experimental design, statistical analysis, biological nomenclature
+- **National standards aligned**: GB/T 7713.1-2006, GB/T 7714-2015, GB 3100-3102-93
 
 ## Multi-Platform Support
 
@@ -37,7 +40,9 @@ Works with all major AI coding agents that support the [Agent Skills](https://ag
 
 | Feature | Native agent | This skill |
 |---------|-------------|------------|
-| Structured review framework | No — ad hoc, varies by run | Yes — 4 dimensions, 60+ checklist items (80+ for PhD) |
+| Structured review framework | No — ad hoc, varies by run | Yes — 5 dimensions, 100+ checklist items + discipline modules |
+| Multi-discipline support | No — generic | Yes — 7 discipline-specific modules (life sciences, medicine, CS/AI, engineering, chemistry, physics, social sciences) |
+| National standards aligned | No | Yes — GB/T 7713.1, GB/T 7714, GB 3100-3102 |
 | Master's + PhD support | No — one-size-fits-all | Yes — adapts standards by degree level |
 | Two-phase workflow | No — single-pass only | Yes — auto analysis + interactive refinement |
 | Cross-chapter checks | No | Yes — questions↔results, methods↔data, citations↔references |
@@ -88,9 +93,24 @@ Chapter completeness, figure/table standards (numbering, titles, resolution, thr
 ### 4. Data & Results
 Appropriate chart types, error bars/confidence intervals, statistical test selection (parametric vs non-parametric), p-value notation, multiple comparison correction, figure quality (axis labels, legends, color-blind friendly), reproducibility.
 
+### 5. Academic Integrity
+Plagiarism detection, image manipulation, data fabrication, citation ethics, originality declaration completeness.
+
+### Discipline-Specific Modules
+
+| Module | Covers |
+|--------|--------|
+| **Life Sciences** | Experimental design (controls, replicates), reagent/instrument documentation, biological nomenclature (gene italics), data submission (GEO/SRA), Western blot/flow cytometry standards |
+| **Medicine** | Clinical study design (CONSORT/STROBE), ethics (IRB, informed consent, ChiCTR registration), diagnostic test metrics, patient privacy |
+| **Computer Science / AI** | Algorithm formalization, baseline comparison, ablation studies, data leakage prevention, code reproducibility, evaluation metrics |
+| **Engineering** | Experimental apparatus documentation, simulation validation (mesh independence), measurement uncertainty, industry standards (GB/ISO/ASTM) |
+| **Chemistry / Materials** | Synthesis documentation, characterization data (NMR/MS/XRD), IUPAC nomenclature, CCDC submission, safety protocols |
+| **Physics** | Theoretical derivation rigor, experimental error analysis, numerical convergence, physical symbol conventions |
+| **Social Sciences** | Questionnaire validity/reliability, sampling methodology, endogeneity control, qualitative coding transparency, value-fact distinction |
+
 ### PhD-Specific Dimensions (additional)
-- **Originality**: original contribution vs incremental improvement, publishability at high-impact journals
-- **Independent research capability**: ability to formulate questions, design experiments, diagnose problems
+- **Originality**: original contribution vs incremental improvement, publishability at high-impact journals/conferences
+- **Independent research capability**: ability to formulate questions, design research, diagnose problems
 - **Research system coherence**: logical connections between multi-chapter studies, progressive depth
 - **Literature review depth**: field-level understanding, coverage of classic and cutting-edge work, critical evaluation of debates
 - **Publication record**: papers published/accepted during candidacy, relationship to thesis content
@@ -211,14 +231,22 @@ The skill will automatically convert, analyze, and generate a structured review 
 
 ## Files
 
-- `SKILL.md` — **the only required file**. Loaded by all platforms as the skill instructions.
-- `checklist.md` — per-chapter review checklist across 4 dimensions (loaded by SKILL.md during review)
+- `SKILL.md` — main skill instructions, loaded by all platforms
+- `checklist.md` — universal review checklist across 5 dimensions (loaded by SKILL.md during review)
 - `output-template.md` — review report output template (loaded by SKILL.md for report generation)
+- `disciplines/` — discipline-specific review modules:
+  - `life-sciences.md` — biology, biomedical, ecology, agriculture
+  - `medicine.md` — clinical medicine, public health, pharmacy
+  - `cs-ai.md` — computer science, AI, machine learning
+  - `engineering.md` — mechanical, electrical, chemical, civil engineering
+  - `chemistry.md` — chemistry, materials science
+  - `physics.md` — theoretical, experimental, computational physics
+  - `social-sciences.md` — economics, management, law, education, psychology
 - `agents/openai.yaml` — OpenAI Codex-specific configuration
 - `README.md` — this file (English, displayed on GitHub homepage)
 - `README_CN.md` — Chinese documentation
 
-> **Note:** `SKILL.md`, `checklist.md`, and `output-template.md` are needed for the skill to work. `agents/openai.yaml` is only needed for Codex. The README files are documentation only.
+> **Note:** `SKILL.md`, `checklist.md`, `output-template.md`, and `disciplines/` are needed for the skill to work. `agents/openai.yaml` is only needed for Codex. The README files are documentation only.
 
 ## Known Limitations
 
