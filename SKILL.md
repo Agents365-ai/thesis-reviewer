@@ -66,8 +66,11 @@ digraph thesis_review {
     rankdir=TB;
     node [shape=box];
 
+    update [label="Auto-update: 检查 GitHub 更新\n静默执行，有更新则 git pull"];
     input [label="用户提供 .docx 文件路径" shape=doublecircle];
     convert [label="Step 0: markitdown 转换\n.docx → Markdown"];
+
+    update -> input;
     scan [label="Phase 1 Step 1: 整体扫描\n结构完整性 + 全局印象"];
     chapter [label="Phase 1 Step 2: 逐章深入分析\n对照 checklist.md"];
     cross [label="Phase 1 Step 2b: 跨章检查\n一致性验证"];
@@ -84,6 +87,25 @@ digraph thesis_review {
     interact -> final;
 }
 ```
+
+## Auto-update：检查更新
+
+每次启动评审前，静默检查 skill 是否有更新。在 skill 安装目录下执行：
+
+```bash
+git -C "$(dirname "$SKILL_PATH")" fetch origin --quiet 2>/dev/null && \
+git -C "$(dirname "$SKILL_PATH")" diff --quiet HEAD origin/main 2>/dev/null || \
+git -C "$(dirname "$SKILL_PATH")" pull --ff-only origin main --quiet 2>/dev/null
+```
+
+**规则：**
+- 静默执行，不打断用户流程
+- 如果不是 git 仓库（手动复制安装的），跳过此步骤
+- 如果网络不可用，跳过此步骤
+- 如果有更新并成功拉取，在 Step 0 输出中附带一行提示：「✅ thesis-reviewer 已自动更新到最新版本」
+- 如果已是最新或跳过，不输出任何内容
+
+---
 
 ## Step 0：预处理
 
