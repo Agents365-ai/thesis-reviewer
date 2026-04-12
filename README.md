@@ -12,7 +12,7 @@ An AI coding agent skill for systematically reviewing master's and doctoral thes
 - **Academic vs professional degree** distinction per 2025 Degree Law
 - **5 review dimensions**: academic quality, writing quality, formatting (GB/T 7713.1), data & results, academic integrity
 - **Two-phase workflow**: Phase 1 auto deep analysis → Phase 2 interactive refinement
-- **100+ universal checklist items** + discipline-specific supplements
+- **149 universal checklist items** + 22-34 discipline-specific supplements (170+ per review)
 - **PhD-specific evaluation**: originality assessment, independent research capability, research system coherence, publication record
 - **Blind review risk assessment**: predicts potential issues across 5 review dimensions
 - **Severity markers**: 🔴 Serious / 🟡 Needs improvement / 🟢 Good — no ambiguous numeric scores
@@ -40,7 +40,7 @@ Works with all major AI coding agents that support the [Agent Skills](https://ag
 
 | Feature | Native agent | This skill |
 |---------|-------------|------------|
-| Structured review framework | No — ad hoc, varies by run | Yes — 5 dimensions, 100+ checklist items + discipline modules |
+| Structured review framework | No — ad hoc, varies by run | Yes — 5 dimensions, 149 universal + discipline-specific items (170+ total) |
 | Multi-discipline support | No — generic | Yes — 7 discipline-specific modules (life sciences, medicine, CS/AI, engineering, chemistry, physics, social sciences) |
 | National standards aligned | No | Yes — GB/T 7713.1, GB/T 7714, GB 3100-3102 |
 | Master's + PhD support | No — one-size-fits-all | Yes — adapts standards by degree level |
@@ -64,7 +64,7 @@ Input .docx
     ▼
 [Phase 1: Auto Deep Analysis]
     ├─ Step 1: Overall scan (structure, research question, global impression)
-    ├─ Step 2: Chapter-by-chapter analysis (against 60+ checklist items)
+    ├─ Step 2: Chapter-by-chapter + global analysis (170+ checklist items)
     ├─ Step 2b: Cross-chapter consistency checks
     └─ Step 3: Generate draft review report
     │

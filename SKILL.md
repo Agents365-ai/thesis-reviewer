@@ -15,7 +15,7 @@ homepage: https://github.com/Agents365-ai/thesis-reviewer
 compatibility: Requires markitdown MCP for .docx conversion. Works with any LLM-based agent on any platform.
 platforms: [macos, linux, windows]
 allowed-tools: [Read, Write, Edit, Bash, mcp__markitdown__convert_to_markdown]
-metadata: {"openclaw":{"requires":{"bins":["npx"]},"emoji":"📝","os":["darwin","linux","win32"]},"hermes":{"tags":["thesis-review","dissertation","doctoral-thesis","phd-thesis","academic-review","multi-discipline","graduate-thesis","论文评审","学位论文","博士论文"],"category":"research","requires_tools":[],"related_skills":["paper-reader","scientific-thinking-general","grant-thinking-general"]},"pimo":{"category":"research","tags":["thesis-review","academic-review","multi-discipline","doctoral-thesis"]},"author":"Agents365-ai","version":"3.0.0"}
+metadata: {"openclaw":{"requires":{},"emoji":"📝","os":["darwin","linux","win32"]},"hermes":{"tags":["thesis-review","dissertation","doctoral-thesis","phd-thesis","academic-review","multi-discipline","graduate-thesis","论文评审","学位论文","博士论文"],"category":"research","requires_tools":["mcp__markitdown__convert_to_markdown"],"related_skills":["paper-reader","scientific-thinking-general","grant-thinking-general"]},"pimo":{"category":"research","tags":["thesis-review","academic-review","multi-discipline","doctoral-thesis"]},"author":"Agents365-ai","version":"3.0.0"}
 ---
 
 # 学位论文评审
@@ -90,18 +90,17 @@ digraph thesis_review {
 
 ## Auto-update：检查更新
 
-每次启动评审前，静默检查 skill 是否有更新。在 skill 安装目录下执行：
+每次启动评审前，静默检查 skill 是否有更新。找到本 SKILL.md 文件所在目录，在该目录下执行：
 
-```bash
-git -C "$(dirname "$SKILL_PATH")" fetch origin --quiet 2>/dev/null && \
-git -C "$(dirname "$SKILL_PATH")" diff --quiet HEAD origin/main 2>/dev/null || \
-git -C "$(dirname "$SKILL_PATH")" pull --ff-only origin main --quiet 2>/dev/null
-```
+1. 先检查是否为 git 仓库：`git rev-parse --git-dir`，如果失败则跳过
+2. 获取当前分支名：`git symbolic-ref --short HEAD`
+3. 尝试 fetch 远程：`git fetch origin --quiet`，如果网络不通则跳过
+4. 比较本地与远程：`git diff --quiet HEAD origin/{branch}`，如果无差异则跳过
+5. 如果有更新：`git pull --ff-only origin {branch} --quiet`
 
 **规则：**
 - 静默执行，不打断用户流程
-- 如果不是 git 仓库（手动复制安装的），跳过此步骤
-- 如果网络不可用，跳过此步骤
+- 任何步骤失败（不是 git 仓库、网络不通、分支冲突）均静默跳过
 - 如果有更新并成功拉取，在 Step 0 输出中附带一行提示：「✅ thesis-reviewer 已自动更新到最新版本」
 - 如果已是最新或跳过，不输出任何内容
 
@@ -184,15 +183,23 @@ git -C "$(dirname "$SKILL_PATH")" pull --ff-only origin main --quiet 2>/dev/null
 2. 根据 Step 0 识别的学科领域，读取 `disciplines/{学科}.md` 获取学科专项检查清单
 3. 将两份清单合并使用
 
-按章节顺序，依次分析每一章：
+检查清单中的检查项分为两类，按不同方式执行：
 
-对每章：
+**A. 逐章检查项**（维度一中按章节分组的检查项 + 学科专项检查项）：
+按章节顺序，依次分析每一章。对每章：
 1. 读取该章内容
-2. 对照 `checklist.md` 中该章节对应的检查项逐一评估
+2. 对照检查清单中与该章对应的检查项逐一评估
 3. 对每个检查项给出严重程度标记和具体意见
 4. 标注问题的具体位置（如能识别，给出段落位置描述）
 5. 给出改进建议
 6. 撰写本章综合评语（1 段）
+
+**B. 全局检查项**（所有章节分析完成后统一执行）：
+- 维度二：写作质量（逻辑连贯性、论证严密性、语言表达）— 需通读全文才能评判
+- 维度三：格式规范（论文结构完整性、页面设置、图表规范、参考文献、公式编排等）
+- 维度四：数据与结果（统计分析、图表质量、可重复性）
+- 维度五：学术诚信（学术不端检查、引用规范）
+- 跨章检查（研究问题↔结果、方法↔数据、引用↔文献列表一致性等）
 
 每分析完一章，向用户输出该章的分析结果，格式：
 ```
@@ -255,7 +262,8 @@ git -C "$(dirname "$SKILL_PATH")" pull --ff-only origin main --quiet 2>/dev/null
 > 2. **追问具体问题** — 例如「第三章的实验设计对照组设置是否合理？」
 > 3. **调整意见** — 修改某条评审意见的严重程度或内容
 > 4. **补充意见** — 添加你发现的我遗漏的问题
-> 5. **完成精修** — 生成最终评审意见书
+> 5. **删除意见** — 移除你认为不恰当的评审意见
+> 6. **完成精修** — 生成最终评审意见书
 >
 > 直接输入编号或描述你的需求：
 
@@ -265,6 +273,7 @@ git -C "$(dirname "$SKILL_PATH")" pull --ff-only origin main --quiet 2>/dev/null
 - **追问具体问题**：定位到论文相关段落，给出针对性分析。
 - **调整意见**：用户指定某条意见，修改其严重程度标记或文字内容。记录变更。
 - **补充意见**：用户提出新的评审意见，确认后加入报告。
+- **删除意见**：用户指定某条意见，确认后从报告中移除。
 - **每次交互后**：显示该操作影响的报告部分的更新预览。
 - **完成精修**：合并所有修改，按 `output-template.md` 格式生成最终版本。
 
