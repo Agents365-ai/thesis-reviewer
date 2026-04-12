@@ -1,0 +1,19 @@
+interface:
+  display_name: "Thesis Reviewer"
+  short_description: "Systematically review master's theses in life sciences with two-phase workflow: auto deep analysis + interactive refinement"
+  brand_color: "#2E7D32"
+
+policy:
+  allow_implicit_invocation: true
+
+capabilities:
+  - Convert .docx thesis to Markdown via markitdown
+  - Full-spectrum review across 4 dimensions (academic quality, writing, formatting, data)
+  - Phase 1 auto deep analysis with chapter-by-chapter checklist evaluation
+  - Phase 2 interactive refinement with per-chapter discussion
+  - Cross-chapter consistency checks (questions↔results, methods↔data, citations↔references)
+  - Structured review report with severity markers (serious/needs improvement/good)
+  - Prioritized revision roadmap for students
+
+prerequisites:
+  - markitdown MCP (for .docx to Markdown conversion)
