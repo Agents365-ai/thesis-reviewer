@@ -1,15 +1,17 @@
-# Thesis Reviewer — Systematic Master's Thesis Review
+# Thesis Reviewer — Systematic Thesis Review for Life Sciences
 
 [中文文档](README_CN.md)
 
-An AI coding agent skill for systematically reviewing master's theses in life sciences. Provides full-spectrum, structured review feedback from a supervisor's perspective — designed to help students improve their thesis before submission.
+An AI coding agent skill for systematically reviewing master's and doctoral theses in life sciences. Provides full-spectrum, structured review feedback from a supervisor's perspective — designed to help students improve their thesis before submission.
 
 ## What it does
 
 - Converts `.docx` thesis to Markdown via `markitdown` MCP, then reviews chapter by chapter
+- **Supports both master's and PhD theses** — auto-detects degree type, adapts review standards accordingly
 - **4 review dimensions**: academic quality, writing quality, formatting, data & results
 - **Two-phase workflow**: Phase 1 auto deep analysis → Phase 2 interactive refinement
-- **60+ checklist items** covering every aspect from experimental design to reference formatting
+- **60+ checklist items** (80+ for PhD) covering every aspect from experimental design to reference formatting
+- **PhD-specific evaluation**: originality assessment, independent research capability, research system coherence, publication record
 - **Severity markers**: 🔴 Serious / 🟡 Needs improvement / 🟢 Good — no ambiguous numeric scores
 - **Cross-chapter consistency checks**: questions↔results, methods↔data, citations↔references
 - **Prioritized revision roadmap** — students know exactly what to fix first
@@ -35,9 +37,11 @@ Works with all major AI coding agents that support the [Agent Skills](https://ag
 
 | Feature | Native agent | This skill |
 |---------|-------------|------------|
-| Structured review framework | No — ad hoc, varies by run | Yes — 4 dimensions, 60+ checklist items |
+| Structured review framework | No — ad hoc, varies by run | Yes — 4 dimensions, 60+ checklist items (80+ for PhD) |
+| Master's + PhD support | No — one-size-fits-all | Yes — adapts standards by degree level |
 | Two-phase workflow | No — single-pass only | Yes — auto analysis + interactive refinement |
 | Cross-chapter checks | No | Yes — questions↔results, methods↔data, citations↔references |
+| PhD originality assessment | No | Yes — original contribution, independent research, system coherence |
 | Severity markers | No — inconsistent feedback format | Yes — 🔴/🟡/🟢 with prioritized revision roadmap |
 | Review report template | No — freeform output | Yes — formal review report deliverable to students |
 | Life sciences expertise | Generic | Domain-specific (experimental design, statistics, nomenclature) |
@@ -83,6 +87,13 @@ Chapter completeness, figure/table standards (numbering, titles, resolution, thr
 
 ### 4. Data & Results
 Appropriate chart types, error bars/confidence intervals, statistical test selection (parametric vs non-parametric), p-value notation, multiple comparison correction, figure quality (axis labels, legends, color-blind friendly), reproducibility.
+
+### PhD-Specific Dimensions (additional)
+- **Originality**: original contribution vs incremental improvement, publishability at high-impact journals
+- **Independent research capability**: ability to formulate questions, design experiments, diagnose problems
+- **Research system coherence**: logical connections between multi-chapter studies, progressive depth
+- **Literature review depth**: field-level understanding, coverage of classic and cutting-edge work, critical evaluation of debates
+- **Publication record**: papers published/accepted during candidacy, relationship to thesis content
 
 ## Prerequisites
 
@@ -187,8 +198,8 @@ The skill will automatically convert, analyze, and generate a structured review 
 
 ## Trigger Keywords
 
-- Chinese: 论文评审, 学位论文, 审阅论文, 论文修改意见, 硕士论文, 毕业论文
-- English: thesis review, dissertation review, thesis feedback
+- Chinese: 论文评审, 学位论文, 审阅论文, 论文修改意见, 硕士论文, 博士论文, 毕业论文
+- English: thesis review, dissertation review, thesis feedback, PhD thesis, doctoral thesis
 
 ## Output Files
 

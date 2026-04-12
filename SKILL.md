@@ -2,23 +2,29 @@
 name: thesis-reviewer
 description: >
   Use when the user wants to review, evaluate, or provide feedback on a
-  master's thesis (硕士学位论文). Triggers on keywords like "论文评审",
-  "学位论文", "thesis review", "审阅论文", "论文修改意见", "硕士论文",
-  "毕业论文". Covers life sciences theses with full-spectrum review:
-  academic quality, writing quality, formatting, and data analysis.
+  master's or doctoral thesis (硕士/博士学位论文). Triggers on keywords like
+  "论文评审", "学位论文", "thesis review", "审阅论文", "论文修改意见",
+  "硕士论文", "博士论文", "毕业论文", "doctoral thesis", "PhD thesis".
+  Covers life sciences theses with full-spectrum review: academic quality,
+  writing quality, formatting, and data analysis. Adapts review standards
+  based on degree level (master's vs doctoral).
 license: MIT
 homepage: https://github.com/Agents365-ai/thesis-reviewer
 compatibility: Requires markitdown MCP for .docx conversion. Works with any LLM-based agent on any platform.
 platforms: [macos, linux, windows]
 allowed-tools: [Read, Write, Edit, Bash, mcp__markitdown__convert_to_markdown]
-metadata: {"openclaw":{"requires":{"bins":["npx"]},"emoji":"📝","os":["darwin","linux","win32"]},"hermes":{"tags":["thesis-review","dissertation","academic-review","life-sciences","graduate-thesis","论文评审","学位论文"],"category":"research","requires_tools":[],"related_skills":["paper-reader","scientific-thinking-general","grant-thinking-general"]},"pimo":{"category":"research","tags":["thesis-review","academic-review","life-sciences"]},"author":"Agents365-ai","version":"1.0.0"}
+metadata: {"openclaw":{"requires":{"bins":["npx"]},"emoji":"📝","os":["darwin","linux","win32"]},"hermes":{"tags":["thesis-review","dissertation","doctoral-thesis","phd-thesis","academic-review","life-sciences","graduate-thesis","论文评审","学位论文","博士论文"],"category":"research","requires_tools":[],"related_skills":["paper-reader","scientific-thinking-general","grant-thinking-general"]},"pimo":{"category":"research","tags":["thesis-review","academic-review","life-sciences","doctoral-thesis"]},"author":"Agents365-ai","version":"1.1.0"}
 ---
 
-# 硕士学位论文评审
+# 学位论文评审
 
 ## 概述
 
-系统化评审生命科学领域硕士学位论文。以导师视角提供建设性反馈，帮助学生在提交前改进论文质量。
+系统化评审生命科学领域硕士和博士学位论文。以导师视角提供建设性反馈，帮助学生在提交前改进论文质量。
+
+**支持学位类型：**
+- **硕士学位论文** — 标准评审标准
+- **博士学位论文** — 更高的创新性、独立研究能力、学术贡献要求
 
 **评审覆盖四大维度：**
 1. 学术质量（研究问题、创新性、方法论、实验设计）
@@ -66,10 +72,14 @@ digraph thesis_review {
 3. 将转换结果保存到论文同目录下：`{filename}-converted.md`
 4. 读取转换后的 Markdown，识别章节结构
 5. 提取基本信息：论文题目、章节数、各章标题
-6. 向用户报告：已完成转换，共识别到 N 个章节，列出章节标题
+6. **识别学位类型**：从封面页或用户指令中判断是硕士论文还是博士论文。如果无法判断，询问用户：
+   > 请确认论文类型：(1) 硕士学位论文 (2) 博士学位论文
+7. 向用户报告：已完成转换，学位类型为{硕士/博士}，共识别到 N 个章节，列出章节标题
+
+**学位类型决定评审标准：** 博士论文将启用 `checklist.md` 中的「博士论文附加检查」部分，在创新性、独立研究能力、学术贡献等方面采用更高标准。
 
 **如果用户未提供文件路径，提示：**
-> 请提供硕士论文的 .docx 文件路径，例如：`/path/to/thesis.docx`
+> 请提供学位论文的 .docx 文件路径，例如：`/path/to/thesis.docx`
 
 ## Phase 1：自动深度分析
 
@@ -213,3 +223,4 @@ digraph thesis_review {
 4. **区分严重程度**：🔴 仅用于真正影响论文核心质量的问题，不要滥用
 5. **导师视角**：语气应兼具严谨和关怀，目标是帮助学生成长
 6. **生命科学专业性**：关注实验设计的生物学合理性、数据的统计规范性、生物学命名规范等学科特有要求
+7. **学位层次适配**：博士论文需更高标准——创新性必须体现原创贡献而非增量改进；需展示独立研究能力；多章研究之间需有内在逻辑联系；文献综述需体现对领域的全局把握

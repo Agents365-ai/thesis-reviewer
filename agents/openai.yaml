@@ -1,6 +1,6 @@
 interface:
   display_name: "Thesis Reviewer"
-  short_description: "Systematically review master's theses in life sciences with two-phase workflow: auto deep analysis + interactive refinement"
+  short_description: "Systematically review master's and doctoral theses in life sciences with two-phase workflow: auto deep analysis + interactive refinement"
   brand_color: "#2E7D32"
 
 policy:
@@ -8,8 +8,10 @@ policy:
 
 capabilities:
   - Convert .docx thesis to Markdown via markitdown
+  - Support both master's and doctoral (PhD) theses with adapted standards
   - Full-spectrum review across 4 dimensions (academic quality, writing, formatting, data)
-  - Phase 1 auto deep analysis with chapter-by-chapter checklist evaluation
+  - PhD-specific evaluation (originality, independent research, system coherence, publications)
+  - Phase 1 auto deep analysis with chapter-by-chapter checklist evaluation (60+ items, 80+ for PhD)
   - Phase 2 interactive refinement with per-chapter discussion
   - Cross-chapter consistency checks (questions↔results, methods↔data, citations↔references)
   - Structured review report with severity markers (serious/needs improvement/good)
