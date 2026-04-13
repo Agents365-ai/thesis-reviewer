@@ -2,7 +2,15 @@
 
 [中文文档](README_CN.md)
 
-An AI coding agent skill for systematically reviewing master's and doctoral theses across all academic disciplines. Provides full-spectrum, structured review feedback from a supervisor's perspective — designed to help students improve their thesis before submission.
+An AI coding agent skill for systematically reviewing master's and doctoral theses across all academic disciplines. Designed for both **supervisors** and **students** — supervisors use it to generate structured review feedback, students use it for pre-submission self-checks to catch issues before blind review.
+
+### Who is it for?
+
+| Role | Use Case |
+|------|----------|
+| **Supervisors / Advisors** | Generate structured review reports for students, ensure nothing is overlooked across 170+ checklist items |
+| **Students** | Self-check before submission — identify blind review risks, fix issues before your advisor or reviewers see them |
+| **Committee Members** | Quickly assess thesis quality and produce evaluation opinions |
 
 ## What it does
 
