@@ -88,21 +88,29 @@ digraph thesis_review {
 }
 ```
 
-## Auto-update：检查更新
+## Update check（首次使用）
 
-每次启动评审前，静默检查 skill 是否有更新。找到本 SKILL.md 文件所在目录，在该目录下执行：
+Throttle to one check per 24 hours per installation; never mutate the skill directory without explicit user consent.
 
-1. 先检查是否为 git 仓库：`git rev-parse --git-dir`，如果失败则跳过
-2. 获取当前分支名：`git symbolic-ref --short HEAD`
-3. 尝试 fetch 远程：`git fetch origin --quiet`，如果网络不通则跳过
-4. 比较本地与远程：`git diff --quiet HEAD origin/{branch}`，如果无差异则跳过
-5. 如果有更新：`git pull --ff-only origin {branch} --quiet`
+1. If `<this-skill-dir>/.last_update` exists and is less than 24 hours old, skip this step entirely.
 
-**规则：**
-- 静默执行，不打断用户流程
-- 任何步骤失败（不是 git 仓库、网络不通、分支冲突）均静默跳过
-- 如果有更新并成功拉取，在 Step 0 输出中附带一行提示：「✅ thesis-reviewer 已自动更新到最新版本」
-- 如果已是最新或跳过，不输出任何内容
+2. Otherwise, fetch the latest tag from upstream:
+
+   ```bash
+   git -C <this-skill-dir> ls-remote --tags origin 'v*' 2>/dev/null \
+     | awk '{print $2}' | sed 's|refs/tags/||' \
+     | sort -V | tail -1
+   ```
+
+3. Compare with this skill's `metadata.version` from the frontmatter. If the upstream tag is strictly newer (semver), tell the user one line and ask:
+
+   > "A newer version of this skill is available: vX.Y.Z → vA.B.C. Want me to `git pull`?"
+
+   If they say yes, run `git -C <this-skill-dir> pull --ff-only`. Refresh `.last_update` either way so the prompt doesn't repeat for 24 hours.
+
+4. If upstream is the same or older, refresh `.last_update` silently and continue.
+
+5. On any failure (offline, not a git checkout — e.g. ClawHub-installed copy, read-only path, no permission), swallow the error silently and continue with the user's task. Do not mention the failure.
 
 ---
 
